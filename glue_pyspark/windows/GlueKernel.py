@@ -338,6 +338,8 @@ class GlueKernel(IPythonKernel):
         return self.session_id
 
     def get_new_session_id(self):
+        # FIXME: override: $SESSION_ID appears empty in Windows version of Kernel; replacing it with a generic string using uuid
+        #return self._generate_session_id()
         return self.new_session_id
 
     def set_session_id(self, session_id):
@@ -535,7 +537,8 @@ class GlueKernel(IPythonKernel):
             )
 
         # Generate new session ID with UUID if no custom ID is set
-        if not self.get_new_session_id():
+        ## SZ: fix with Conny
+        if not self.get_new_session_id() or self.session_id == '$SESSION_ID':
             self.set_new_session_id()
             if not self.get_new_session_id():
                 raise ValueError(f"Session ID was not set.")
